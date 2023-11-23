@@ -1,58 +1,48 @@
+# Import necessary libraries
 import streamlit as st
 
+# Define the Employee class
 class Employee:
-    def __init__(self, name, age, position, salary):
+    def __init__(self, name, assigned_task, attendance, leaves, completed_tasks):
         self.name = name
-        self.age = age
-        self.position = position
-        self.salary = salary
-        self.performance_rating = 0
-        self.tasks_completed = 0
-        self.leaves_taken = 0
+        self.assigned_task = assigned_task
+        self.attendance = attendance
+        self.leaves = leaves
+        self.completed_tasks = completed_tasks
 
     def calculate_performance(self):
-        # Assume some logic for calculating performance rating
-        base_performance = (self.salary / 1000) * 1.5
-        task_bonus = self.tasks_completed * 0.2
-        leaves_penalty = self.leaves_taken * 0.1
-        self.performance_rating = base_performance + task_bonus - leaves_penalty
+        # Calculate performance based on attendance and completed tasks
+        performance = (self.attendance / 100) * (self.completed_tasks / self.assigned_task) * 100
+        return performance
 
-    def display_info(self):
-        st.write(f"Name: {self.name}")
-        st.write(f"Age: {self.age}")
-        st.write(f"Position: {self.position}")
-        st.write(f"Salary: ${self.salary}")
-        st.write(f"Performance Rating: {self.performance_rating}")
-        st.write(f"Tasks Completed: {self.tasks_completed}")
-        st.write(f"Leaves Taken: {self.leaves_taken}")
+# Function to display employee information and performance
+def display_employee_info(employee):
+    st.write(f"Name: {employee.name}")
+    st.write(f"Assigned Tasks: {employee.assigned_task}")
+    st.write(f"Attendance: {employee.attendance}%")
+    st.write(f"Leaves: {employee.leaves}")
+    st.write(f"Completed Tasks: {employee.completed_tasks}")
+    st.write(f"Performance: {employee.calculate_performance():.2f}%")
 
-
+# Streamlit application
 def main():
+    # Title of the application
     st.title("Employee Performance Calculator")
 
-    # Input employee details
-    name = st.text_input("Enter Name:")
-    age = st.number_input("Enter Age:", min_value=18, max_value=100)
-    position = st.text_input("Enter Position:")
-    salary = st.number_input("Enter Salary:", min_value=0)
+    # Get employee information from the user
+    name = st.text_input("Enter employee name:")
+    assigned_task = st.number_input("Enter the number of assigned tasks:", min_value=1)
+    attendance = st.number_input("Enter attendance percentage:", min_value=0, max_value=100)
+    leaves = st.number_input("Enter the number of leaves taken:")
+    completed_tasks = st.number_input("Enter the number of completed tasks:", min_value=0, max_value=assigned_task)
 
     # Create an Employee object
-    employee = Employee(name, age, position, salary)
+    employee = Employee(name, assigned_task, attendance, leaves, completed_tasks)
 
-    # Input task and leave details
-    employee.tasks_completed = st.number_input("Enter Tasks Completed:", min_value=0)
-    employee.leaves_taken = st.number_input("Enter Leaves Taken:", min_value=0)
-
-    # Display employee information
-    if st.button("Display Employee Info"):
-        employee.display_info()
-
-    # Calculate and display performance
+    # Display employee information and performance
     if st.button("Calculate Performance"):
-        employee.calculate_performance()
-        st.success("Performance calculated successfully!")
-        st.write(f"Performance Rating: {employee.performance_rating}")
+        display_employee_info(employee)
 
-
+# Run the application
 if __name__ == "__main__":
     main()
