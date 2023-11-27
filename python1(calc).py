@@ -1,5 +1,6 @@
 # Import necessary libraries
 import streamlit as st
+import pandas as pd  # Added import for pandas
 
 # Define the Employee class
 class Employee:
@@ -23,6 +24,18 @@ def display_employee_info(employee):
     st.write(f"Leaves: {employee.leaves}")
     st.write(f"Completed Tasks: {employee.completed_tasks}")
     st.write(f"Performance: {employee.calculate_performance():.2f}%")
+
+    # Save performance data to Excel
+    df = pd.DataFrame({
+        'Name': [employee.name],
+        'Assigned Tasks': [employee.assigned_task],
+        'Attendance': [employee.attendance],
+        'Leaves': [employee.leaves],
+        'Completed Tasks': [employee.completed_tasks],
+        'Performance': [employee.calculate_performance()],
+    })
+
+    df.to_excel('employee_performance.xlsx', index=False)
 
 # Streamlit application
 def main():
